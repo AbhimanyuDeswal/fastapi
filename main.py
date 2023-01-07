@@ -40,3 +40,23 @@ async def get_one_post(id:int):
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID not found")
     return post
+
+@app.put("/posts/{id}")
+async def update_post(id: int, post: Post):
+    old_post = find_post(id)
+    if not old_post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+    for i, p in enumerate(my_posts):
+        if p["id"]==id:
+            my_posts[i]=post.dict()
+    return "Post updated"
+
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_post(id:int):
+    old_post = find_post(id)
+    if not old_post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+    for i, p in enumerate(my_posts):
+        if p["id"]==id:
+            my_posts.pop(i)    
+    return status.HTTP_204_NO_CONTENT
